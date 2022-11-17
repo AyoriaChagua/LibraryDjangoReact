@@ -1,24 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
+import NavbarLib from "./Navbar";
+import LoanList from "./LoanList";
+import * as ReactBootstrap from "react-bootstrap";
+import FormLib from "./Form";
 
 function App() {
+  const [loans, setLoans] = useState([]);
+  const [loan, setLoan] = useState({
+    loanDate: "",
+    returnDate: "",
+    book: 0,
+    user: 0
+  });
+  useEffect(() => {
+    const getLoans = () => {
+      fetch("http://127.0.0.1:8000/loan/")
+        .then((res) => res.json())
+        .then((res) => setLoans(res));
+    };
+    getLoans();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <NavbarLib title="Ayoria Library" />
+      <br />
+      <ReactBootstrap.Container>
+        <ReactBootstrap.Row>
+          <ReactBootstrap.Col sm={8}>
+            <LoanList loans = {loans}/>
+          </ReactBootstrap.Col>
+          <ReactBootstrap.Col sm={4}>
+            <h3>loan form</h3>
+          </ReactBootstrap.Col>
+        </ReactBootstrap.Row>
+      </ReactBootstrap.Container>
+    </>
   );
 }
 
